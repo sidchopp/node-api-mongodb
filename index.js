@@ -26,7 +26,6 @@ connectToDb((err) => {
     });
 
     db = getDb();
-    console.log("db:", db);
   }
 });
 
