@@ -3,6 +3,9 @@ import { db } from "../index.js";
 
 // GET all books
 const getBooks = async (req, res) => {
+  // for pagination
+  const page = parseInt(req.query.p) || 0;
+  const booksPerPage = 3;
   let books = [];
 
   try {
@@ -10,6 +13,8 @@ const getBooks = async (req, res) => {
       .collection("books")
       .find()
       .sort({ author: 1 })
+      .skip(page * booksPerPage)
+      .limit(booksPerPage)
       .forEach((book) => books.push(book));
 
     res.status(200).json(books);

@@ -19,7 +19,6 @@ router.get("/:id", getBook);
 router.post("/", createBook);
 
 // UPDATE a book
-
 router.patch("/:id", updateBook);
 
 //DELETE a book
