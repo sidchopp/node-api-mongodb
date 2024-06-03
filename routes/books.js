@@ -3,6 +3,7 @@ import {
   getBook,
   getBooks,
   createBook,
+  updateBook,
   deleteBook,
 } from "../controllers/bookControllers.js";
 
@@ -16,6 +17,10 @@ router.get("/:id", getBook);
 
 //POST/CREATE a book
 router.post("/", createBook);
+
+// UPDATE a book
+
+router.patch("/:id", updateBook);
 
 //DELETE a book
 router.delete("/:id", deleteBook);

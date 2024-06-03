@@ -41,33 +41,50 @@ const getBook = async (req, res) => {
 };
 
 // POST/CREATE a book
-const createBook = (req, res) => {
-  const book = req.body;
-
-  db.collection("books")
-    .insertOne(book)
-    .then((result) => {
-      res.status(201).json(result);
-    })
-    .catch((err) => {
-      res.status(500).json({ err: "Could not create new document" });
-    });
+const createBook = async (req, res) => {
+  try {
+    const book = req.body;
+    const result = await db.collection("books").insertOne(book);
+    res.status(201).json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not create new document" });
+  }
 };
 
-//DELETE a book
-const deleteBook = (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-    db.collection("books")
-      .deleteOne({ _id: new ObjectId(req.params.id) })
-      .then((result) => {
-        res.status(200).json(result);
-      })
-      .catch((err) => {
-        res.status(500).json({ error: "Could not delete document" });
-      });
-  } else {
+// UPDATE a book
+const updateBook = async (req, res) => {
+  try {
+    const updates = req.body;
+    if (ObjectId.isValid(req.params.id)) {
+      const result = await db
+        .collection("books")
+        .updateOne({ _id: new ObjectId(req.params.id) }, { $set: updates });
+      res.status(200).json(result);
+    } else {
+      res.status(400).json({ error: "Invalid ID format" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not update document" });
+  }
+};
+
+// DELETE a book
+const deleteBook = async (req, res) => {
+  try {
+    if (ObjectId.isValid(req.params.id)) {
+      const result = await db
+        .collection("books")
+        .deleteOne({ _id: new ObjectId(req.params.id) });
+      res.status(200).json(result);
+    } else {
+      res.status(400).json({ error: "Invalid ID format" });
+    }
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Could not delete document" });
   }
 };
 
-export { getBooks, getBook, createBook, deleteBook };
+export { getBooks, getBook, createBook, updateBook, deleteBook };
